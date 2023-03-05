@@ -70,7 +70,7 @@ const store = {
    * @returns {string} - the name of the store
    */
   getName() {
-    // write your code here & return value
+    return store.name;
   },
   /**
    * Returns the inventory of the store
@@ -78,7 +78,7 @@ const store = {
    * @returns {array} - the inventory of the store
    */
   getInventory() {
-    // write your code here & return value
+    return inventory;
   },
   /**
    * Returns an arrays of most expensive items in inventory
@@ -87,7 +87,15 @@ const store = {
    * @return {array} items - the array of items that are filtered
    */
   getExpensiveItems(minPrice) {
-    // write your code here & return value
+    const exArr = [];
+    const inv = this.getInventory();
+    for (let i = 0; i < inv.length; i += 1) {
+      if (inv[i].price > minPrice) {
+        exArr.push(inv[i]);
+      }
+    }
+
+    return exArr;
   },
   /**
    * Returns an array of item names in store
@@ -95,7 +103,11 @@ const store = {
    * @return {array} items - the array of items that are filtered
    */
   getStoreItems() {
-    // write your code here & return value
+    const arr = [];
+    for (let i = 0; i < inventory.length; i += 1) {
+      arr.push(inventory[i].name);
+    }
+    return arr;
   },
   /**
    * Returns true if the item is in the store
@@ -105,7 +117,12 @@ const store = {
    * false otherwise
    */
   isItemInStore(itemName) {
-    // write your code here & return value
+    for (let i = 0; i < inventory.length; i += 1) {
+      if (inventory[i].name === itemName) {
+        return true;
+      }
+    }
+    return false;
   },
   /**
    * Returns the price of the item
@@ -116,7 +133,14 @@ const store = {
    * must use isItemInStore() method in this object
    */
   getItemPrice(itemName) {
-    // write your code here & return value
+    if (this.isItemInStore(itemName)) {
+      for (let i = 0; i < inventory.length; i += 1) {
+        if (inventory[i].name === itemName) {
+          return inventory[i].price;
+        }
+      }
+    }
+    return -1;
   },
 
   /**
@@ -128,7 +152,14 @@ const store = {
    * must use isItemInStore() method in this object
    */
   getItemQuantity(itemName) {
-    // write your code here & return value
+    if (this.isItemInStore(itemName)) {
+      for (let i = 0; i < inventory.length; i += 1) {
+        if (inventory[i].name === itemName) {
+          return inventory[i].quantity;
+        }
+      }
+    }
+    return -1;
   },
 
   /**
@@ -143,7 +174,16 @@ const store = {
    * must use isItemInStore() method in this object
    */
   addItemQuantity(itemName, price, quantity) {
-    // write your code here & return value
+    if (this.isItemInStore(itemName)) {
+      for (let i = 0; i < inventory.length; i += 1) {
+        if (inventory[i].name === itemName) {
+          inventory[i].quantity += quantity;
+          return inventory[i].quantity;
+        }
+      }
+    }
+    inventory.push({ name: itemName, price, quantity });
+    return inventory[inventory.length - 1].quantity;
   },
   /**
    * Removes a certain quantity of an item from the store
@@ -156,7 +196,21 @@ const store = {
    * must use isItemInStore() method in this object
    */
   removeItemQuantity(itemName, quantity) {
-    // write your code here & return value
+    if (this.isItemInStore(itemName)) {
+      for (let i = 0; i < inventory.length; i += 1) {
+        if (inventory[i].name === itemName) {
+          const item = inventory[i];
+
+          if (item.quantity >= quantity) {
+            item.quantity -= quantity;
+            return item.quantity;
+          }
+          return -1;
+        }
+      }
+    }
+
+    return -1;
   },
   /**
    * Returns the total of all the items in the store
@@ -165,7 +219,9 @@ const store = {
    * must use the reduce() array method
    */
   getTotalValue() {
-    // write your code here & return value
+    const sum = inventory.reduce((accumulator, currentValue) => (
+      accumulator + (currentValue.price * currentValue.quantity)), 0);
+    return sum;
   },
 };
 
